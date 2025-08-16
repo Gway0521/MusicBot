@@ -74,7 +74,7 @@ public class JMusicBot
         Prompt prompt = new Prompt("JMusicBot");
         
         // startup checks
-        OtherUtil.checkVersion(prompt);
+        // OtherUtil.checkVersion(prompt); // Disabled automatic update checking
         OtherUtil.checkJavaVersion(prompt);
         
         // load config

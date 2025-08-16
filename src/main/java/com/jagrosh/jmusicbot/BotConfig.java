@@ -42,13 +42,15 @@ public class BotConfig
     private String token, prefix, altprefix, helpWord, playlistsFolder, logLevel,
             successEmoji, warningEmoji, errorEmoji, loadingEmoji, searchingEmoji,
             evalEngine;
-    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots;
+    private boolean stayInChannel, songInGame, npImages, updatealerts, useEval, dbots, bilibiliEnabled;
     private long owner, maxSeconds, aloneTimeUntilStop;
     private int maxYTPlaylistPages;
     private double skipratio;
     private OnlineStatus status;
     private Activity game;
     private Config aliases, transforms;
+    private String bilibiliUserAgent, bilibiliReferer, bilibiliOrigin, bilibiliSessdata;
+    private int bilibiliMaxBitrateKbps;
 
     private boolean valid = false;
     
@@ -98,6 +100,18 @@ public class BotConfig
             aliases = config.getConfig("aliases");
             transforms = config.getConfig("transforms");
             skipratio = config.getDouble("skipratio");
+            
+            // Bilibili configuration with defaults
+            bilibiliEnabled = config.hasPath("bilibili.enabled") ? config.getBoolean("bilibili.enabled") : true;
+            bilibiliUserAgent = config.hasPath("bilibili.userAgent") ? config.getString("bilibili.userAgent") : 
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+            bilibiliReferer = config.hasPath("bilibili.referer") ? config.getString("bilibili.referer") : 
+                "https://www.bilibili.com/";
+            bilibiliOrigin = config.hasPath("bilibili.origin") ? config.getString("bilibili.origin") : 
+                "https://www.bilibili.com";
+            bilibiliMaxBitrateKbps = config.hasPath("bilibili.maxBitrateKbps") ? config.getInt("bilibili.maxBitrateKbps") : 320;
+            bilibiliSessdata = config.hasPath("bilibili.sessdata") ? config.getString("bilibili.sessdata") : "";
+            
             dbots = owner == 113156185389092864L;
             
             // we may need to write a new config file
@@ -380,5 +394,35 @@ public class BotConfig
     public Config getTransforms()
     {
         return transforms;
+    }
+    
+    public boolean isBilibiliEnabled()
+    {
+        return bilibiliEnabled;
+    }
+    
+    public String getBilibiliUserAgent()
+    {
+        return bilibiliUserAgent;
+    }
+    
+    public String getBilibiliReferer()
+    {
+        return bilibiliReferer;
+    }
+    
+    public String getBilibiliOrigin()
+    {
+        return bilibiliOrigin;
+    }
+    
+    public int getBilibiliMaxBitrateKbps()
+    {
+        return bilibiliMaxBitrateKbps;
+    }
+    
+    public String getBilibiliSessdata()
+    {
+        return bilibiliSessdata;
     }
 }

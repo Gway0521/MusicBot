@@ -31,6 +31,7 @@ import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceMan
 import com.sedmelluq.discord.lavaplayer.source.vimeo.VimeoAudioSourceManager;
 import dev.lavalink.youtube.YoutubeAudioSourceManager;
 import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -48,6 +49,20 @@ public class PlayerManager extends DefaultAudioPlayerManager
     public void init()
     {
         TransformativeAudioSourceManager.createTransforms(bot.getConfig().getTransforms()).forEach(t -> registerSourceManager(t));
+
+        // Register Bilibili source manager with clean configuration
+        BilibiliAudioSourceManager bilibiliSourceManager = new BilibiliAudioSourceManager();
+        BilibiliConfig bilibiliConfig = new BilibiliConfig(
+            bot.getConfig().isBilibiliEnabled(),
+            bot.getConfig().getBilibiliUserAgent(),
+            bot.getConfig().getBilibiliReferer(),
+            bot.getConfig().getBilibiliOrigin(),
+            bot.getConfig().getBilibiliSessdata(),
+            bot.getConfig().getBilibiliMaxBitrateKbps()
+        );
+        bilibiliSourceManager.updateConfiguration(bilibiliConfig);
+        registerSourceManager(bilibiliSourceManager);
+        LoggerFactory.getLogger(PlayerManager.class).info("Registered BilibiliAudioSourceManager (enabled: {})", bot.getConfig().isBilibiliEnabled());
 
         YoutubeAudioSourceManager yt = new YoutubeAudioSourceManager(true);
         yt.setPlaylistPageCount(bot.getConfig().getMaxYTPlaylistPages());

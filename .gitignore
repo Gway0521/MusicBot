@@ -2,6 +2,7 @@
 /target/
 /Playlists/
 /test/
+CLAUDE.md
 *.json
 *.txt
 nb*.xml
