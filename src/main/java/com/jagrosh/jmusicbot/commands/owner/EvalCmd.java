@@ -20,7 +20,6 @@ import javax.script.ScriptEngineManager;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jmusicbot.Bot;
 import com.jagrosh.jmusicbot.commands.OwnerCommand;
-import net.dv8tion.jda.api.entities.ChannelType;
 
 /**
  *
@@ -54,9 +53,9 @@ public class EvalCmd extends OwnerCommand
         se.put("bot", bot);
         se.put("event", event);
         se.put("jda", event.getJDA());
-        if (event.getChannelType() != ChannelType.PRIVATE) {
+        if (event.getGuild() != null) {
             se.put("guild", event.getGuild());
-            se.put("channel", event.getChannel());
+            se.put("channel", event.getMessage().getChannel());
         }
         try
         {

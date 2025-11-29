@@ -23,7 +23,6 @@ import com.jagrosh.jmusicbot.utils.OtherUtil;
 import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary;
 import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.ChannelType;
 
 /**
  *
@@ -78,9 +77,9 @@ public class DebugCmd extends OwnerCommand
                 .append("\n  Users = ").append(event.getJDA().getUserCache().size());
         sb.append("\n```");
         
-        if(event.isFromType(ChannelType.PRIVATE) 
-                || event.getSelfMember().hasPermission(event.getTextChannel(), Permission.MESSAGE_ATTACH_FILES))
-            event.getChannel().sendFile(sb.toString().getBytes(), "debug_information.txt").queue();
+        if(event.getGuild() == null
+                || event.getSelfMember().hasPermission(event.getMessage().getChannel().asGuildMessageChannel(), Permission.MESSAGE_ATTACH_FILES))
+            event.getMessage().getChannel().sendFiles(net.dv8tion.jda.api.utils.FileUpload.fromData(sb.toString().getBytes(), "debug_information.txt")).queue();
         else
             event.reply("Debug Information: " + sb.toString());
     }

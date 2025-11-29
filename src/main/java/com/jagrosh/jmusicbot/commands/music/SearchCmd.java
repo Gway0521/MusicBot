@@ -103,10 +103,22 @@ public class SearchCmd extends MusicCommand
         @Override
         public void playlistLoaded(AudioPlaylist playlist)
         {
+            if(playlist.getTracks().isEmpty())
+            {
+                m.editMessage(FormatUtil.filter(event.getClient().getWarning()+" No results found for `"+event.getArgs()+"`.")).queue();
+                return;
+            }
+            else if(playlist.getTracks().size()==1)
+            {
+                trackLoaded(playlist.getTracks().get(0));
+                return;
+            }
+
+            // Show OrderedMenu to select a track from search results
             builder.setColor(event.getSelfMember().getColor())
                     .setText(FormatUtil.filter(event.getClient().getSuccess()+" Search results for `"+event.getArgs()+"`:"))
                     .setChoices(new String[0])
-                    .setSelection((msg,i) -> 
+                    .setSelection((msg, i) ->
                     {
                         AudioTrack track = playlist.getTracks().get(i-1);
                         if(bot.getConfig().isTooLong(track))
@@ -118,12 +130,11 @@ public class SearchCmd extends MusicCommand
                         AudioHandler handler = (AudioHandler)event.getGuild().getAudioManager().getSendingHandler();
                         int pos = handler.addTrack(new QueuedTrack(track, RequestMetadata.fromResultHandler(track, event)))+1;
                         event.replySuccess("Added **" + FormatUtil.filter(track.getInfo().title)
-                                + "** (`" + TimeUtil.formatTime(track.getDuration()) + "`) " + (pos==0 ? "to begin playing" 
+                                + "** (`" + TimeUtil.formatTime(track.getDuration()) + "`) " + (pos==0 ? "to begin playing"
                                     : " to the queue at position "+pos));
                     })
                     .setCancel((msg) -> {})
-                    .setUsers(event.getAuthor())
-                    ;
+                    .setUsers(event.getAuthor());
             for(int i=0; i<4 && i<playlist.getTracks().size(); i++)
             {
                 AudioTrack track = playlist.getTracks().get(i);

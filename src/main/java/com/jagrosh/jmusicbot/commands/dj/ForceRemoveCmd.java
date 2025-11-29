@@ -74,26 +74,26 @@ public class ForceRemoveCmd extends DJCommand
         }
         else if(found.size()>1)
         {
+            // Show OrderedMenu to select which user to remove tracks from
             OrderedMenu.Builder builder = new OrderedMenu.Builder();
-            for(int i=0; i<found.size() && i<4; i++)
+            for(int i=0; i<found.size() && i<10; i++)
             {
                 Member member = found.get(i);
-                builder.addChoice("**"+member.getUser().getName()+"**#"+member.getUser().getDiscriminator());
+                builder.addChoice("**"+member.getUser().getName()+"**");
             }
 
             builder
-            .setSelection((msg, i) -> removeAllEntries(found.get(i-1).getUser(), event))
-            .setText("Found multiple users:")
-            .setColor(event.getSelfMember().getColor())
-            .useNumbers()
-            .setUsers(event.getAuthor())
-            .useCancelButton(true)
-            .setCancel((msg) -> {})
-            .setEventWaiter(bot.getWaiter())
-            .setTimeout(1, TimeUnit.MINUTES)
-
-            .build().display(event.getChannel());
-
+                    .setSelection((msg, i) -> removeAllEntries(found.get(i-1).getUser(), event))
+                    .setText("Found multiple users matching '"+event.getArgs()+"'. Select one:")
+                    .setColor(event.getSelfMember().getColor())
+                    .useNumbers()
+                    .setUsers(event.getAuthor())
+                    .useCancelButton(true)
+                    .setCancel((msg) -> {})
+                    .allowTextInput(false)
+                    .setEventWaiter(bot.getWaiter())
+                    .setTimeout(1, TimeUnit.MINUTES)
+                    .build().display(event.getChannel());
             return;
         }
         else
